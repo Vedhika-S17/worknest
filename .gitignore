@@ -1,0 +1,42 @@
+venv/ 
+# === LOGS ===
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# === NODE / FRONTEND ===
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# === PYTHON / BACKEND ===
+venv/
+Python-3.10.17/
+__pycache__/
+*.py[cod]
+*.so
+.env
+.flaskenv
+instance/
+*.sqlite3
+
+# === SYSTEM / IDE ===
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# === TEST FILES ===
+coverage/
+.pytest_cache/
+htmlcov/

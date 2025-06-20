@@ -1,0 +1,116 @@
+-- 1. USERS TABLE
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role ENUM('freelancer', 'admin') DEFAULT 'freelancer',
+    is_verified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. USER PROFILES
+CREATE TABLE user_profiles (
+    profile_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    full_name VARCHAR(100) NOT NULL,
+    title VARCHAR(100),
+    bio TEXT,
+    hourly_rate DECIMAL(6,2),
+    location VARCHAR(100),
+    availability VARCHAR(50),
+    profile_image VARCHAR(255),
+    languages JSON,
+    profile_completion_pct INT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 3. SKILLS
+CREATE TABLE skills (
+    skill_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- 4. USER SKILLS
+CREATE TABLE user_skills (
+    user_id INT,
+    skill_id INT,
+    PRIMARY KEY (user_id, skill_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (skill_id) REFERENCES skills(skill_id) ON DELETE CASCADE
+);
+
+-- 5. COMPANIES
+CREATE TABLE companies (
+    company_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    contact_email VARCHAR(255),
+    industry VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 6. PROJECTS
+CREATE TABLE projects (
+    project_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+    status VARCHAR(30),
+    company_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE SET NULL
+);
+
+-- 7. PROJECT ASSIGNMENTS
+CREATE TABLE project_assignments (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    user_id INT NOT NULL,
+    assigned_role VARCHAR(100),
+    progress_status VARCHAR(30),
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 8. TASKS
+CREATE TABLE tasks (
+    task_id INT AUTO_INCREMENT PRIMARY KEY,
+    assignment_id INT,
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+    due_date DATE,
+    status VARCHAR(30),
+    FOREIGN KEY (assignment_id) REFERENCES project_assignments(assignment_id) ON DELETE CASCADE
+);
+
+-- 9. EDUCATIONS
+CREATE TABLE educations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    title VARCHAR(100),
+    description TEXT,
+    from_date DATE,
+    to_date DATE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 10. CERTIFICATIONS
+CREATE TABLE certifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    title VARCHAR(100),
+    description TEXT,
+    from_date DATE,
+    to_date DATE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 11. EXPERIENCES
+CREATE TABLE experiences (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    title VARCHAR(100),
+    description TEXT,
+    from_date DATE,
+    to_date DATE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
