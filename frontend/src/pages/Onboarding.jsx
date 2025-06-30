@@ -15,7 +15,7 @@ const outerContainerStyle = {
 
 const containerStyle = {
   width: "100%",
-  maxWidth: "520px",
+  maxWidth: "620px",
   padding: "2.5rem 2rem",
   fontFamily: "Segoe UI, Arial, sans-serif",
   backgroundColor: "rgba(255,255,255,0.96)",
@@ -150,6 +150,8 @@ const Onboarding = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const navigate = useNavigate();
 
+  const role = localStorage.getItem("role");
+
   useEffect(() => {
     // Extract phone number from JWT token in localStorage
     const token = localStorage.getItem("token");
@@ -179,7 +181,11 @@ const Onboarding = () => {
     e.preventDefault();
     setError("");
 
-    if (!formData.full_name || !formData.experience_level || !formData.goal || formData.work_type.length === 0) {
+    if (
+      !formData.full_name ||
+      !formData.goal ||
+      (role !== "admin" && (!formData.experience_level || formData.work_type.length === 0))
+    ) {
       setError("Please fill all required fields (*)");
       return;
     }
@@ -198,7 +204,11 @@ const Onboarding = () => {
           "Content-Type": "application/json"
         }
       });
-      navigate("/dashboard");
+      if (role === "admin") {
+        navigate("/admindashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to save onboarding data");
     }
@@ -207,6 +217,15 @@ const Onboarding = () => {
   return (
     <div style={outerContainerStyle}>
       <style>{extraStyles}</style>
+      <style>{`
+        html, body, #root {
+          width: 100vw;
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+          box-sizing: border-box;
+        }`}</style>
       <div className="onboarding-container" style={containerStyle}>
         <h2 style={headingStyle}>👋 Complete Your Profile</h2>
         {error && <p style={errorStyle}>{error}</p>}
@@ -221,35 +240,107 @@ const Onboarding = () => {
             required
           />
 
-          <label style={labelStyle}>Title</label>
-          <input
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            style={inputStyle}
-          />
+          {role !== "admin" && (
+            <>
+              <label style={labelStyle}>Title</label>
+              <input
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                style={inputStyle}
+              />
 
-          <label style={labelStyle}>Bio</label>
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            style={textareaStyle}
-          />
+              <label style={labelStyle}>Bio</label>
+              <textarea
+                name="bio"
+                value={formData.bio}
+                onChange={handleChange}
+                style={textareaStyle}
+              />
 
-          <label style={labelStyle}>Experience Level *</label>
-          <select
-            name="experience_level"
-            value={formData.experience_level}
-            onChange={handleChange}
-            style={inputStyle}
-            required
-          >
-            <option value="">Select...</option>
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="expert">Expert</option>
-          </select>
+              <label style={labelStyle}>Experience Level *</label>
+              <select
+                name="experience_level"
+                value={formData.experience_level}
+                onChange={handleChange}
+                style={inputStyle}
+                required
+              >
+                <option value="">Select...</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert">Expert</option>
+              </select>
+
+              <div style={checkboxGroupStyle}>
+                <span style={labelStyle}>Work Type *</span>
+                <label style={checkboxLabelStyle}>
+                  <input
+                    type="checkbox"
+                    value="marketplace"
+                    checked={formData.work_type.includes("marketplace")}
+                    onChange={(e) => toggleWorkType(e.target.value)}
+                    style={{ marginRight: "0.6em" }}
+                  />
+                  Marketplace
+                </label>
+                <label style={checkboxLabelStyle}>
+                  <input
+                    type="checkbox"
+                    value="project_catalog"
+                    checked={formData.work_type.includes("project_catalog")}
+                    onChange={(e) => toggleWorkType(e.target.value)}
+                    style={{ marginRight: "0.6em" }}
+                  />
+                  Project Catalog
+                </label>
+                <label style={checkboxLabelStyle}>
+                  <input
+                    type="checkbox"
+                    value="contract_to_hire"
+                    checked={formData.work_type.includes("contract_to_hire")}
+                    onChange={(e) => toggleWorkType(e.target.value)}
+                    style={{ marginRight: "0.6em" }}
+                  />
+                  Contract-to-Hire
+                </label>
+              </div>
+
+              <label style={labelStyle}>Hourly Rate</label>
+              <input
+                type="number"
+                name="hourly_rate"
+                value={formData.hourly_rate}
+                onChange={handleChange}
+                style={inputStyle}
+              />
+
+              <label style={labelStyle}>Location</label>
+              <input
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                style={inputStyle}
+              />
+
+              <label style={labelStyle}>Availability</label>
+              <input
+                name="availability"
+                value={formData.availability}
+                onChange={handleChange}
+                style={inputStyle}
+              />
+
+              <label style={labelStyle}>Languages (comma separated)</label>
+              <input
+                name="languages"
+                value={formData.languages}
+                onChange={handleChange}
+                style={inputStyle}
+                placeholder="English, Spanish"
+              />
+            </>
+          )}
 
           <label style={labelStyle}>Goal *</label>
           <select
@@ -266,80 +357,12 @@ const Onboarding = () => {
             <option value="explore">Exploring</option>
           </select>
 
-          <div style={checkboxGroupStyle}>
-            <span style={labelStyle}>Work Type *</span>
-            <label style={checkboxLabelStyle}>
-              <input
-                type="checkbox"
-                value="marketplace"
-                checked={formData.work_type.includes("marketplace")}
-                onChange={(e) => toggleWorkType(e.target.value)}
-                style={{ marginRight: "0.6em" }}
-              />
-              Marketplace
-            </label>
-            <label style={checkboxLabelStyle}>
-              <input
-                type="checkbox"
-                value="project_catalog"
-                checked={formData.work_type.includes("project_catalog")}
-                onChange={(e) => toggleWorkType(e.target.value)}
-                style={{ marginRight: "0.6em" }}
-              />
-              Project Catalog
-            </label>
-            <label style={checkboxLabelStyle}>
-              <input
-                type="checkbox"
-                value="contract_to_hire"
-                checked={formData.work_type.includes("contract_to_hire")}
-                onChange={(e) => toggleWorkType(e.target.value)}
-                style={{ marginRight: "0.6em" }}
-              />
-              Contract-to-Hire
-            </label>
-          </div>
-
-          <label style={labelStyle}>Hourly Rate</label>
-          <input
-            type="number"
-            name="hourly_rate"
-            value={formData.hourly_rate}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          <label style={labelStyle}>Location</label>
-          <input
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          <label style={labelStyle}>Availability</label>
-          <input
-            name="availability"
-            value={formData.availability}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
           <label style={labelStyle}>Profile Image URL</label>
           <input
             name="profile_image"
             value={formData.profile_image}
             onChange={handleChange}
             style={inputStyle}
-          />
-
-          <label style={labelStyle}>Languages (comma separated)</label>
-          <input
-            name="languages"
-            value={formData.languages}
-            onChange={handleChange}
-            style={inputStyle}
-            placeholder="English, Spanish"
           />
 
           <button type="submit" style={buttonStyle}>
@@ -352,4 +375,3 @@ const Onboarding = () => {
 };
 
 export default Onboarding;
-

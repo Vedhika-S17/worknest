@@ -1,14 +1,24 @@
 // src/App.jsx
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import api from "./config/axios";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminProfile from "./pages/AdminProfile";
+import CreateProjects from "./pages/CreateProjects";
 import Dashboard from "./pages/Dashboard";
+import EditProfile from "./pages/EditProfile";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
+import ViewAllProjects from "./pages/ViewAllProjects"; // 👈 add this
+import ViewProjects from "./pages/ViewProjects";
+import MyProjects from "./pages/MyProjects";
+
+
+
+
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("access_token");
@@ -42,6 +52,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        
         <Route
           path="/onboarding"
           element={
@@ -65,7 +76,49 @@ const App = () => {
               <Dashboard />
             </ProtectedRoute>
           }
-        /> 
+        />
+
+        <Route
+          path="/admindashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        >
+
+        
+          <Route path="create-project" element={<CreateProjects />} />
+          <Route path="view-projects" element={<ViewProjects />} />
+          <Route path="adminprofile" element={<AdminProfile />} />
+         
+          </Route>
+          <Route
+            path="/edit-profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/view-projects"
+            element={
+              <ProtectedRoute>
+                <ViewAllProjects />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/my-projects"
+            element={
+              <ProtectedRoute>
+                <MyProjects />
+              </ProtectedRoute>
+            }
+          />
+
       </Routes>
     </Router>
   );

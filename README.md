@@ -1,7 +1,7 @@
 
 ### 📄 `README.md`:
 
-```markdown
+
 # WorkNest
 
 WorkNest is an internal freelance and project tracking platform built using:

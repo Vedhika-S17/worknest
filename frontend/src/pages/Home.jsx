@@ -14,7 +14,7 @@ const outerContainerStyle = {
 
 const containerStyle = {
   width: "100%",
-  maxWidth: "440px",
+  maxWidth: "800px",
   padding: "2.5rem 2rem",
   fontFamily: "Segoe UI, Arial, sans-serif",
   backgroundColor: "rgba(255,255,255,0.92)",
@@ -83,6 +83,15 @@ const Home = () => {
   return (
     <div style={outerContainerStyle}>
       <style>{extraStyles}</style>
+      <style>{`
+        html, body, #root {
+          width: 100vw;
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          box-sizing: border-box;
+        }`}</style>
       <div className="home-container" style={containerStyle}>
         <h1 style={headingStyle}>🚀 Welcome to WorkNest</h1>
         <p style={subTextStyle}>The internal freelancer & project platform</p>

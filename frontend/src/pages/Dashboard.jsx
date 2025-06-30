@@ -40,10 +40,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        profileBtnRef.current &&
-        !profileBtnRef.current.contains(event.target)
-      ) {
+      if (profileBtnRef.current && !profileBtnRef.current.contains(event.target)) {
         setProfileMenuOpen(false);
       }
     };
@@ -96,7 +93,7 @@ const Dashboard = () => {
           height: 100vh;
           margin: 0;
           padding: 0;
-          overflow-x: hidden;
+          overflow: hidden;
           box-sizing: border-box;
         }
         .dashboard-grid {
@@ -105,11 +102,11 @@ const Dashboard = () => {
           grid-template-rows: 64px 1fr;
           height: 100vh;
           width: 100vw;
-          background: #f5f7fa;
+          background: #6fa0ed;
         }
         .sidebar {
           grid-row: 1 / span 2;
-          background: #223047;
+          background:rgb(34, 48, 71);
           color: #fff;
           padding: 32px 18px 0 18px;
           display: flex;
@@ -118,7 +115,7 @@ const Dashboard = () => {
           min-width: ${SIDEBAR_WIDTH}px;
         }
         .sidebar-header {
-          font-size: 1.45 rem;
+          font-size: 1.5rem; /* Consistent font size */
           font-weight: 700;
           margin-bottom: 18px;
           letter-spacing: 1px;
@@ -138,7 +135,7 @@ const Dashboard = () => {
           display: flex;
           align-items: center;
           gap: 12px;
-          font-size: 1.08rem;
+          font-size: 1.1rem; /* Consistent font size */
           transition: background 0.2s;
         }
         .nav-link.active, .nav-link:hover {
@@ -147,19 +144,19 @@ const Dashboard = () => {
         .topbar {
           grid-column: 2 / 3;
           grid-row: 1 / 2;
-          background: #fff;
+          background: "blue";
           display: flex;
           align-items: center;
           justify-content: flex-end;
           padding: 0 32px;
-          box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+          box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
           z-index: 2;
           position: relative;
         }
         .profile-btn {
           width: 40px;
           height: 40px;
-          border-radius: 50%;
+          border-radius: 80%;
           background: #223047;
           color: #fff;
           border: none;
@@ -188,7 +185,7 @@ const Dashboard = () => {
         .main-content {
           grid-column: 2 / 3;
           grid-row: 2 / 3;
-          padding: 40px 5vw 40px 5vw;
+          padding: 40px 5vw;
           overflow-y: auto;
           width: 100%;
           box-sizing: border-box;
@@ -201,7 +198,7 @@ const Dashboard = () => {
           margin-bottom: 28px;
         }
         .section-title {
-          font-size: 1.2rem;
+          font-size: 1.2rem; /* Consistent font size */
           font-weight: 600;
           color: #2c3e50;
           margin-bottom: 12px;
@@ -269,6 +266,20 @@ const Dashboard = () => {
           <li className={`nav-link ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
             <span role="img" aria-label="settings">⚙️</span>
             <span>Settings</span>
+          </li>
+          <li className={`nav-link ${activeTab === 'projects' ? 'active' : ''}`} onClick={() => {
+            setActiveTab('projects');
+            navigate('/view-projects'); // Navigate to the View Projects page
+          }}>
+            <span role="img" aria-label="projects">📁</span>
+            <span>View Projects</span>
+          </li>
+          <li className={`nav-link ${activeTab === 'my-projects' ? 'active' : ''}`} onClick={() => {
+            setActiveTab('my-projects');
+            navigate('/my-projects'); // Navigate to the My Projects page
+          }}>
+            <span role="img" aria-label="my-projects">📌</span>
+            <span>My Projects</span>
           </li>
         </ul>
       </aside>
@@ -348,7 +359,8 @@ const Dashboard = () => {
             <div className="section-title">
               {activeTab === 'jobs' ? '💼 Browse Jobs' : 
                activeTab === 'companies' ? '🏢 Companies' :
-               activeTab === 'messages' ? '✉️ Messages' : '⚙️ Settings'}
+               activeTab === 'messages' ? '✉️ Messages' : 
+               activeTab === 'my-projects' ? '📌 My Projects' : '⚙️ Settings'}
             </div>
             <p>This section is under construction. Content will be added soon.</p>
           </div>

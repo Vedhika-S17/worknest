@@ -15,7 +15,7 @@ const outerContainerStyle = {
 
 const containerStyle = {
   width: "100%",
-  maxWidth: "420px",
+  maxWidth: "800px",
   padding: "2.5rem 2rem",
   fontFamily: "Segoe UI, Arial, sans-serif",
   backgroundColor: "#f9fafd",
@@ -25,6 +25,7 @@ const containerStyle = {
   flexDirection: "column",
   alignItems: "center",
   boxSizing: "border-box",
+  
 };
 
 const headingStyle = {
@@ -106,17 +107,20 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      const { access_token } = res.data;
+      const { access_token, role } = res.data;
+
       localStorage.setItem('access_token', access_token);
+      localStorage.setItem('role', role);
 
       setMessage('Login successful');
-      console.log("✅ Login complete. Redirecting to /dashboard...");
-      navigate('/dashboard');
+      console.log(`✅ Login complete. Redirecting to ${role === 'admin' ? '/admin' : '/dashboard'}...`);
+
+      navigate(role === 'admin' ? '/admindashboard' : '/dashboard');
     } catch (err) {
       console.error('Login failed:', err.response?.data || err.message);
       setMessage(err.response?.data?.error || 'Invalid phone or password');
     }
-  }; 
+  };
 
   const extraStyles = `
     @media (max-width: 600px) {
@@ -139,6 +143,15 @@ const Login = () => {
   return (
     <div style={outerContainerStyle}>
       <style>{extraStyles}</style>
+      <style>{`
+        html, body, #root {
+          width: 100vw;
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          box-sizing: border-box;
+        }`}</style>
       <div className="login-container" style={containerStyle}>
         <h2 style={headingStyle}>🔐 Login</h2>
         <form onSubmit={handleSubmit} autoComplete="off" style={{ width: "100%" }}>

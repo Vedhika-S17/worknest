@@ -1,51 +1,61 @@
 // src/components/Navbar.jsx
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import api from '../config/axios';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem('access_token');
+  const location = useLocation();
+  const path = location.pathname;
 
-  const handleLogout = async () => {
-    try {
-      await api.post('/auth/logout');
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    navigate('/login');
-  };
+  const hideDashboardLink = 
+    path === '/' ||
+    path === '/login' ||
+    path === '/signup' ||
+    path.startsWith('/onboarding') ||
+    path.startsWith('/admindashboard');
 
   return (
-    <nav style={{
-      padding: '1rem',
-      backgroundColor: '#f1f1f1',
-      display: 'flex',
-      justifyContent: 'space-between'
-    }}>
-      <div>
-        <Link to="/" style={{ marginRight: '1rem' }}>🏠 Home</Link>
-        {isLoggedIn && (
-          <>
-            <Link to="/dashboard" style={{ marginRight: '1rem' }}>📊 Dashboard</Link>
-            <Link to="/profile" style={{ marginRight: '1rem' }}>👤 Profile</Link>
-          </>
-        )}
+    <nav style={styles.navbar}>
+      <div style={styles.logo}>
+        <Link to="/" style={styles.logoLink}>WorkNest</Link>
       </div>
-      <div>
-        {isLoggedIn ? (
-          <button onClick={handleLogout}>🚪 Logout</button>
-        ) : (
-          <>
-            <Link to="/login"><button>Login</button></Link>
-            <Link to="/signup" style={{ marginLeft: '0.5rem' }}><button>Signup</button></Link>
-          </>
-        )}
-      </div>
+
+      {!hideDashboardLink && (
+        <div style={styles.rightLinks}>
+          <Link to="/dashboard" style={styles.dashboardLink}>Dashboard</Link>
+        </div>
+      )}
     </nav>
   );
+};
+
+const styles = {
+  navbar: {
+    padding: '1.5rem 2rem',
+    backgroundColor: 'rgb(33, 33, 33)',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontFamily: "'Segoe UI', sans-serif",
+  },
+  logo: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+  },
+  logoLink: {
+    color: '#ffffff',
+    textDecoration: 'none',
+  },
+  rightLinks: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+  },
+  dashboardLink: {
+    color: '#ffffff',
+    textDecoration: 'none',
+    fontSize: '1rem',
+    fontWeight: '500',
+  },
 };
 
 export default Navbar;

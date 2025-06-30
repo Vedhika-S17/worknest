@@ -1,6 +1,8 @@
-  import React, { useState } from "react";
-  import { useNavigate } from "react-router-dom";
-  import api from "../config/axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../config/axios";
+
+
 
   // Styles
   const outerContainerStyle = {
@@ -93,7 +95,7 @@
       phone_number: "",
       email: "",
       password: "",
-      role: "freelancer", // default
+      role: "", 
     });
 
     const [errors, setErrors] = useState("");
@@ -110,7 +112,11 @@
       try {
         const res = await api.post("/auth/signup", formData);
         localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("role", res.data.role);
+
+        
         navigate("/onboarding");
+        
       } catch (err) {
         const msg = err.response?.data?.message || "Signup failed";
         setErrors(msg);
@@ -143,6 +149,15 @@
     return (
       <div style={outerContainerStyle}>
         <style>{extraStyles}</style>
+        <style>{`
+        html, body, #root {
+          width: 100vw;
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          box-sizing: border-box;
+        }`}</style>
         <div className="signup-container" style={containerStyle}>
           <h2 style={headingStyle}>Sign Up</h2>
           {errors && <p style={errorStyle}>{errors}</p>}
@@ -189,8 +204,9 @@
               style={selectStyle}
               required
             >
-              <option value="freelancer">Freelancer</option>
-              <option value="client">Client</option>
+            <option value="">Select role</option>
+            <option value="freelancer">Freelancer</option>
+            <option value="admin">Admin</option>
             </select>
 
             <button type="submit" style={buttonStyle}>
