@@ -2,11 +2,9 @@ from .user_model import User
 from .profile_model import UserProfile
 from .skill_model import Skill
 from .user_skill_model import UserSkill
-from .company_model import Company
 from .project_model import Project
 from .project_assignment_model import ProjectAssignment
 from .task_model import Task
-from .education_model import Education
-from .certification_model import Certification
-from .experience_model import Experience
-from routes.profiles import profiles_bp
+from .user_background_model import UserBackground
+from .project_request_model import ProjectRequest
+from .project_skill_model import ProjectSkill

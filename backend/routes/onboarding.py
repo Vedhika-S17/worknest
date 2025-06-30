@@ -7,23 +7,22 @@ from marshmallow import ValidationError
 from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 
 import os
-print("🧠 Running file:", os.path.abspath(__file__))
+
 
 onboarding_bp = Blueprint("onboarding", __name__, url_prefix="/api/onboarding")
 
 # Initialize schema
 profile_schema = UserProfileSchema()
 
-print("🧠 Running file:", os.path.abspath(__file__))
 
 onboarding_bp = Blueprint("onboarding", __name__, url_prefix="/api/onboarding")
 profile_schema = UserProfileSchema()
 
-print("going somewhere")
+
 @onboarding_bp.route("/debug-onboarding", methods=["POST"])
 @jwt_required()
 def onboarding():
-    print("✅ ONBOARDING ROUTE HIT")
+    
 
     try:
         verify_jwt_in_request(optional=True)

@@ -25,11 +25,3 @@ def assign_user():
     return jsonify({"message": "User assigned to project"}), 201
 
 
-# ✅ schemas/project_schema.py
-from marshmallow import Schema, fields, validate
-
-class ProjectSchema(Schema):
-    title = fields.Str(required=True, validate=validate.Length(min=3))
-    description = fields.Str()
-    status = fields.Str(validate=validate.OneOf(["draft", "active", "completed"]))
-    company_id = fields.Int()
